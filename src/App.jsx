@@ -7,26 +7,21 @@ import "./App.css";
 import styles from "./App.module.css";
 import { useState, useEffect } from "react";
 
-function App() {
-  const [counter, setCounter] = useState(0);
-  const [keyword, setKeyword] = useState("");
-  const onClick = () => {
-    console.log(counter);
-    setCounter((value) => value + 1)
-  };
-  const onChange = (event) => setKeyword(event.target.value);
-  console.log("i run all the time");
-  useEffect(() => {console.log("CALL THE API...")}, []);
+function Hello() {
   useEffect(() => {
-    if (keyword !== "" && keyword.length >= 5) {
-      console.log("SEARCH FOR", keyword);
-    }
-  }, [keyword]);
+    console.log("created :)");
+    return () => console.log("bye :(");
+  }, []);
+  return <h1>Hello</h1>;
+}
+
+function App() {
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
   return (
     <div>
-      <input value={keyword} onChange={onChange} type="text" placeholder="Search here..."/>
-      <h3>{counter}</h3>
-      <button onClick={onClick}>Click me!</button>
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+      {showing ? <Hello /> : null}
     </div>
   );
 }
