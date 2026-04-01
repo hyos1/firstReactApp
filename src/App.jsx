@@ -2,30 +2,36 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [coins, setCoins] = useState([]);
-  useEffect(() => {
-    fetch("https://api.coinpaprika.com/v1/tickers")
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(json);
-        setCoins(json);
-        setLoading(false);
-      });
-  }, []);
+  const [movies, setMovies] = useState([]);
 
+  const getMovies = async () => {
+    const response = await fetch(
+      "https://yts.bz/api/v2/list_movies.json?minimum_rating=8.5&sort_by=year",
+    );
+    const json = await response.json();
+    setMovies(json.data.movies);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getMovies();
+  }, []);
+  console.log(movies);
   return (
     <div>
-      <h1>The Coins! {loading ? null : `${coins.length}개`}</h1>
       {loading ? (
-        <strong>Loding...</strong>
+        <h3>Loading....</h3>
       ) : (
-        <select>
-          {coins.map((coin) => (
-            <option key={coin.id}>
-              {coin.name} ({coin.symbol}): ${coin.quotes.USD.price} USD
-            </option>
-          ))}
-        </select>
+        movies.map((movie) => (
+          <div key={movie.id}>
+            <img src={movie.medium_cover_image} alt="" />
+            <h2>제목: {movie.title}</h2>
+            <p>별점: {movie.rating}</p>
+            <ul>
+             장르: {movie.genres.map(g => <li key={g}>{g}</li>)}
+             </ul>
+          </div>
+        ))
       )}
     </div>
   );
