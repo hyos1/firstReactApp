@@ -1,27 +1,40 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from './assets/vite.svg'
-// import heroImg from './assets/hero.png'
-import Button from "./Button";
-import "./App.css";
-import styles from "./App.module.css";
-import { useState, useEffect } from "react";
-
-function Hello() {
-  useEffect(() => {
-    console.log("created :)");
-    return () => console.log("bye :(");
-  }, []);
-  return <h1>Hello</h1>;
-}
+import { useState } from "react";
 
 function App() {
-  const [showing, setShowing] = useState(false);
-  const onClick = () => setShowing((prev) => !prev);
+  const [todo, setTodo] = useState("");
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => {
+    setTodo(event.target.value);
+  };
+  const onSubmit = (event) => {
+    event.preventDefault();
+    if (todo === "") {
+      return;
+    }
+    setToDos((currentArray) => [todo, ...currentArray]);
+    setTodo("");
+  };
+  console.log(toDos);
+
   return (
     <div>
-      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
-      {showing ? <Hello /> : null}
+      <h1>오늘 일정 {toDos.length}개</h1>
+      <form onSubmit={onSubmit} action="">
+        <input
+          autoFocus
+          value={todo}
+          onChange={onChange}
+          type="text"
+          placeholder="Write your to do..."
+        />
+        <button>추가</button>
+      </form>{" "}
+      <hr />
+      <ul>
+        {toDos.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
     </div>
   );
 }
